@@ -1,0 +1,60 @@
+0. // Clone repository
+- use template
+- include branches
+git clone git@github.com:SylvainPS78/NAME.git
+
+
+1. // Install all webpack :
+
+npm init -y
+
+add this to package.json :
+,
+"build": "webpack --config webpack.prod.js",
+"dev": "webpack serve --config webpack.dev.js --open",
+"deploy": "git subtree push --prefix dist origin gh-pages"
+
+Run Commands:
+npm install --save-dev webpack webpack-cli
+npm install --save-dev html-webpack-plugin
+npm install --save-dev style-loader css-loader
+npm install --save-dev html-loader
+npm install --save-dev webpack-dev-server
+
+
+2. // Install ESLINT :
+a. install :
+npm init @eslint/config@latest
+
+
+3. // Install PRETTIER :
+a. install :
+npm install --save-dev --save-exact prettier
+node --eval "fs.writeFileSync('.prettierignore','# Ignore artifacts:\nbuild\ncoverage\n')"
+
+b. run PRETTIER :
+npx prettier . --write
+
+
+3. // CREATE GITHUB 
+git branch gh-pages
+Verify git status (add . & commit if necessary)
+git checkout gh-pages && git merge main --no-edit
+npm run build
+git add dist -f && git commit -m "Deployment commit"
+npm run deploy
+
+Go on GitHub :
+- change Default branch to "gh-pages"
+
+4. // UPDATE GIT :
+
+Run Commands :
+npx eslint yourfile.js 
+npx prettier . --write
+Verify git status (add . & commit if necessary)
+git checkout gh-pages && git merge main --no-edit
+npm run build
+git add dist -f && git commit -m "Deployment commit"
+npm run deploy
+git checkout main
