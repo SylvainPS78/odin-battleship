@@ -1,7 +1,6 @@
 import Ship from "./js/ship.js";
 import Gameboard from "./js/gameBoard.js";
 
-let testShip = new Ship(1);
 let testGameboard = new Gameboard();
 
 test("Ship horizontal creation test", () => {
@@ -17,5 +16,30 @@ test("Ship vertical creation test", () => {
 
   expect(testGameboard.board[78].ship).toBe("testName2");
   expect(testGameboard.board[99].ship).toBe(null);
-  //console.log(testGameboard.board);
+});
+
+test("Ship horizontal fail test", () => {
+  testGameboard.placeShip(3, 9, 2, "X", "ErrorShip");
+
+  expect(testGameboard.board[39].ship).toBe(null);
+});
+
+test("Ship vertical fail test", () => {
+  testGameboard.placeShip(2, 2, 4, "Y", "ErrorShip2");
+
+  expect(testGameboard.board[22].ship).toBe(null);
+  expect(testGameboard.board[12].ship).toBe(null);
+});
+
+test("Collision fail test", () => {
+  testGameboard.placeShip(5, 5, 3, "Y", "ErrorShip3");
+
+  expect(testGameboard.board[55].ship).toBe(null);
+  expect(testGameboard.board[45].ship).toBe(null);
+  expect(testGameboard.board[35].ship).toBe("testName");
+});
+
+test("index fail test", () => {
+  testGameboard.placeShip(10, 1, 1, "Y", "ErrorShip4");
+  expect(testGameboard.placeValid(10, 1, 1, "Y")).toBe(false);
 });

@@ -1,8 +1,9 @@
 import Ship from "./ship.js";
 
 class Gameboard {
-  constructor(board) {
+  constructor(board, shipList = []) {
     this.board = board;
+    this.shipList = shipList;
   }
 
   initializeBoard() {
@@ -20,16 +21,53 @@ class Gameboard {
     }
   }
 
-  placeShip(row, col, length, orientation, shipName) {
-    let newShip = new Ship(length, shipName);
+  placeValid(row, col, length, orientation) {
+    let placeValid = true;
+
+    if (row < 0 || row > 9 || col < 0 || col > 9) {
+      placeValid = false;
+      return placeValid;
+    }
 
     if (orientation === "X") {
       for (let i = 0; i < length; i++) {
-        this.board[row * 10 + (col + i)].ship = newShip.name;
+        if (col + i > 9) {
+          placeValid = false;
+          return placeValid;
+        } else if (this.board[row * 10 + (col + i)].ship !== null) {
+          placeValid = false;
+          return placeValid;
+        }
       }
     } else if (orientation === "Y") {
       for (let i = 0; i < length; i++) {
-        this.board[(row - i) * 10 + col].ship = newShip.name;
+        if (row - i < 0) {
+          placeValid = false;
+          return placeValid;
+        } else if (this.board[(row - i) * 10 + col].ship !== null) {
+          placeValid = false;
+          return placeValid;
+        }
+      }
+    }
+    return placeValid;
+  }
+
+  placeShip(row, col, length, orientation, shipName) {
+    if (!this.placeValid(row, col, length, orientation)) {
+      return;
+    } else {
+      let newShip = new Ship(length, shipName);
+      this.shipList.push(newShip);
+
+      if (orientation === "X") {
+        for (let i = 0; i < length; i++) {
+          this.board[row * 10 + (col + i)].ship = newShip.name;
+        }
+      } else if (orientation === "Y") {
+        for (let i = 0; i < length; i++) {
+          this.board[(row - i) * 10 + col].ship = newShip.name;
+        }
       }
     }
   }
