@@ -95,6 +95,16 @@ class Gameboard {
     }
     return { result: "miss", hit: false };
   }
+
+  allSunk() {
+    for (const ship of Object.values(this.shipList)) {
+      if (ship.sunk === false) {
+        return false;
+      }
+    }
+
+    return true;
+  }
 }
 
 export default Gameboard;

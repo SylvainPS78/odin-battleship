@@ -16,7 +16,6 @@ test("Ship vertical creation test", () => {
 
   expect(testGameboard.board[78].ship).toBe("testName2");
   expect(testGameboard.board[99].ship).toBe(null);
-  console.log(testGameboard);
 });
 
 test("Ship horizontal fail test", () => {
@@ -57,5 +56,13 @@ test("Attack test", () => {
   expect(testGameboard.board[32].hit).toBe(false);
   expect(testGameboard.shipList.testName.hitNumber).toBe(5);
   expect(testGameboard.shipList.testName.sunk).toBe(true);
-  console.log(testGameboard);
+  console.log(testGameboard.shipList);
+});
+
+test("allSunk  test", () => {
+  expect(testGameboard.allSunk()).toBe(false);
+  testGameboard.receiveAttack(8, 8);
+  testGameboard.receiveAttack(7, 8);
+  testGameboard.receiveAttack(6, 8);
+  expect(testGameboard.allSunk()).toBe(true);
 });
