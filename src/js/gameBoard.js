@@ -1,7 +1,7 @@
 import Ship from "./ship.js";
 
 class Gameboard {
-  constructor(board, shipList = []) {
+  constructor(board, shipList = {}) {
     this.board = board;
     this.shipList = shipList;
   }
@@ -58,7 +58,7 @@ class Gameboard {
       return;
     } else {
       let newShip = new Ship(length, shipName);
-      this.shipList.push(newShip);
+      this.shipList[shipName] = newShip;
 
       if (orientation === "X") {
         for (let i = 0; i < length; i++) {
@@ -70,6 +70,30 @@ class Gameboard {
         }
       }
     }
+  }
+
+  receiveAttack(row, col) {
+    const targetSquare = this.board[row * 10 + col];
+    if (targetSquare.hit) {
+      return { result: "already_hit", hit: false };
+    }
+
+    targetSquare.hit = true;
+
+    if (targetSquare.ship) {
+      const hitShip = this.shipList[targetSquare.ship];
+
+      hitShip.hit();
+      const isSunk = hitShip.isSunk();
+
+      return {
+        result: isSunk ? "sunk" : "hit",
+        hit: true,
+        shipName: targetSquare.ship,
+        sunk: isSunk,
+      };
+    }
+    return { result: "miss", hit: false };
   }
 }
 
