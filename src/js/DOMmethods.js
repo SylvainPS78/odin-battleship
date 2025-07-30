@@ -1,4 +1,9 @@
+let gameState = { player1: null, player2: null };
+
 function displayGameBoards(player1, player2) {
+  gameState.player1 = player1;
+  gameState.player2 = player2;
+
   const main = document.querySelector("main");
 
   const gameContainer = document.createElement("div");
@@ -71,7 +76,13 @@ function handleSquareClick(event) {
   const square = event.target;
   const row = parseInt(square.dataset.row);
   const col = parseInt(square.dataset.col);
-  const player = square.dataset.player;
+  const playerId = square.dataset.player;
+  const player = gameState[playerId];
+
+  if (player.gameboard.board[row * 10 + col].hit === false) {
+    player.gameboard.board[row * 10 + col].hit = true;
+    updateBoardDisplay(player, playerId);
+  }
 
   console.log(`Case cliquée: ${player} - Ligne ${row}, Colonne ${col}`);
 }
