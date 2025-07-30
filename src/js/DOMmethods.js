@@ -51,6 +51,22 @@ function createPlayerSection(player, playerId) {
   return section;
 }
 
+function updateBoardDisplay(player, playerId) {
+  const board = document.getElementById(`board-${playerId}`);
+
+  player.gameboard.board.forEach((square, index) => {
+    const domSquare = board.children[index];
+
+    if (square.ship) {
+      domSquare.classList.add("ship");
+      domSquare.dataset.shipName = square.ship;
+    }
+    if (square.hit) {
+      domSquare.classList.add(square.ship ? "hit" : "miss");
+    }
+  });
+}
+
 function handleSquareClick(event) {
   const square = event.target;
   const row = parseInt(square.dataset.row);
@@ -60,4 +76,4 @@ function handleSquareClick(event) {
   console.log(`Case cliquée: ${player} - Ligne ${row}, Colonne ${col}`);
 }
 
-export { displayGameBoards };
+export { displayGameBoards, updateBoardDisplay };

@@ -64,7 +64,8 @@ class Gameboard {
         for (let i = 0; i < length; i++) {
           this.board[row * 10 + (col + i)].ship = newShip.name;
         }
-      } else if (orientation === "Y") {
+      }
+      if (orientation === "Y") {
         for (let i = 0; i < length; i++) {
           this.board[(row - i) * 10 + col].ship = newShip.name;
         }
