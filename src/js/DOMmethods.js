@@ -1,3 +1,5 @@
+import Gameboard from "./gameBoard.js";
+
 let gameActive = true;
 let gameState = { player1: null, player2: null };
 let currentPlayer = null;
@@ -41,7 +43,7 @@ function createPlayerSection(player, playerId) {
   for (let row = 0; row < 10; row++) {
     for (let col = 0; col < 10; col++) {
       const square = document.createElement("div");
-      square.className = "board-square";
+      square.className = "board-square hidden";
       square.dataset.row = row;
       square.dataset.col = col;
       square.dataset.player = playerId;
@@ -70,30 +72,59 @@ function updateBoardDisplay(player, playerId) {
       domSquare.dataset.shipName = square.ship;
     }
     if (square.hit) {
+      domSquare.classList.remove("hidden");
       domSquare.classList.add(square.ship ? "hit" : "miss");
     }
+
+    //if (square.hit && square.ship) {
+    //    const hitShipName = square.ship; // "Destroyer", "Submarine", etc.
+    // const hitShip = player.gameboard.shipList[hitShipName];
+    //  }
   });
 }
 
 function handleSquareClick(event) {
   if (!gameActive) return;
-
   const square = event.target;
   const row = parseInt(square.dataset.row);
   const col = parseInt(square.dataset.col);
   const playerId = square.dataset.player;
   const player = gameState[playerId];
 
-  if (playerId === currentPlayer.playerId) return;
-  if (player.gameboard.board[row * 10 + col].hit === true) return;
+  if (playerId === currentPlayer.playerId) return; // Player can't click their own board
 
-  if (player.gameboard.board[row * 10 + col].hit === false) {
+  let attackResult = player.gameboard.receiveAttack(row, col);
+  if (attackResult.result === "already_hit") return; // Player can't click twice the same square
+
+  if (
+    attackResult.result === "miss" ||
+    attackResult.result === "hit" ||
+    attackResult.result === "sunk"
+  ) {
     player.gameboard.board[row * 10 + col].hit = true;
     updateBoardDisplay(player, playerId);
+
+    if (attackResult.result === "sunk") {
+      markShipAsSunk(player, attackResult.shipName, playerId);
+    }
   }
 
   console.log(`Case cliquée: ${player.name} - Ligne ${row}, Colonne ${col}`);
+  console.log(player.gameboard.shipList);
   handleRound();
+}
+
+function markShipAsSunk(player, shipName, playerId) {
+  const board = document.getElementById(`board-${playerId}`);
+
+  player.gameboard.board.forEach((square, index) => {
+    if (square.ship === shipName) {
+      const domSquare = board.children[index];
+      domSquare.classList.add("sunk");
+    }
+  });
+
+  console.log(`💥 ${shipName} coulé !`);
 }
 
 function handleRound() {
