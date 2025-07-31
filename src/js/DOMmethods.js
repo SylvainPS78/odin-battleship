@@ -87,4 +87,8 @@ function handleSquareClick(event) {
   console.log(`Case cliquée: ${player} - Ligne ${row}, Colonne ${col}`);
 }
 
+function handleRound() {
+  const gameTitle = document.getElementById();
+}
+
 export { displayGameBoards, updateBoardDisplay };

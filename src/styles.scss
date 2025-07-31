@@ -113,6 +113,20 @@ select {
 }
 
 // ==============================================
+// Header
+// ==============================================
+
+h1 {
+  margin: 3vh auto;
+  width: fit-content;
+  text-align: center;
+  background-color: rgba($white, 0.9);
+  border-radius: 12px;
+  padding: 1.5rem 3rem;
+  box-shadow: 0 8px 32px rgba($dark-grey, 0.15);
+}
+
+// ==============================================
 // Footer
 // ==============================================
 footer {
