@@ -1,8 +1,11 @@
+let gameActive = true;
 let gameState = { player1: null, player2: null };
+let currentPlayer = null;
 
 function displayGameBoards(player1, player2) {
   gameState.player1 = player1;
   gameState.player2 = player2;
+  currentPlayer = player1;
 
   const main = document.querySelector("main");
 
@@ -73,22 +76,31 @@ function updateBoardDisplay(player, playerId) {
 }
 
 function handleSquareClick(event) {
+  if (!gameActive) return;
+
   const square = event.target;
   const row = parseInt(square.dataset.row);
   const col = parseInt(square.dataset.col);
   const playerId = square.dataset.player;
   const player = gameState[playerId];
 
+  if (playerId === currentPlayer.playerId) return;
+  if (player.gameboard.board[row * 10 + col].hit === true) return;
+
   if (player.gameboard.board[row * 10 + col].hit === false) {
     player.gameboard.board[row * 10 + col].hit = true;
     updateBoardDisplay(player, playerId);
   }
 
-  console.log(`Case cliquée: ${player} - Ligne ${row}, Colonne ${col}`);
+  console.log(`Case cliquée: ${player.name} - Ligne ${row}, Colonne ${col}`);
+  handleRound();
 }
 
 function handleRound() {
-  const gameTitle = document.getElementById();
+  const gameTitle = document.getElementById("player-turn");
+  currentPlayer =
+    currentPlayer === gameState.player1 ? gameState.player2 : gameState.player1;
+  gameTitle.textContent = `Your turn ${currentPlayer.name}`;
 }
 
 export { displayGameBoards, updateBoardDisplay };

@@ -4,8 +4,8 @@ import Gameboard from "./js/gameBoard.js";
 import player from "./js/player.js";
 import { displayGameBoards, updateBoardDisplay } from "./js/DOMmethods.js";
 
-let player1 = new player("Player test", "real");
-let player2 = new player("Computer", "computer");
+let player1 = new player("Player test", "real", "player1");
+let player2 = new player("Computer", "computer", "player2");
 
 displayGameBoards(player1, player2);
 
