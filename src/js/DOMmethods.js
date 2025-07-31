@@ -174,7 +174,36 @@ function simulateComputerClick() {
     const randomIndex =
       availableSquares[Math.floor(Math.random() * availableSquares.length)];
     board.children[randomIndex].click();
-  }, 500);
+  }, 750);
 }
 
-export { displayGameBoards, updateBoardDisplay };
+function createShipButtons() {
+  const ships = [
+    { name: "Destroyer", length: 2 },
+    { name: "Submarine", length: 3 },
+    { name: "Cruiser", length: 3 },
+    { name: "Battleship", length: 4 },
+    { name: "Carrier", length: 5 },
+  ];
+
+  const buttonContainer = document.createElement("div");
+  buttonContainer.className = "ship-button-container";
+
+  ships.forEach((ship) => {
+    const btn = document.createElement("button");
+    btn.className = "ship-select-btn";
+    btn.textContent = `${ship.name} (${ship.length})`;
+    btn.dataset.shipName = ship.name;
+    btn.dataset.shipLength = ship.length;
+    buttonContainer.appendChild(btn);
+  });
+
+  const main = document.querySelector("main");
+  if (main) {
+    main.insertBefore(buttonContainer, main.firstChild);
+  }
+}
+
+// Appeler la fonction après l'affichage des boards
+
+export { displayGameBoards, updateBoardDisplay, createShipButtons };
