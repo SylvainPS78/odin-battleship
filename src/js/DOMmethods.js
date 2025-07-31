@@ -75,11 +75,6 @@ function updateBoardDisplay(player, playerId) {
       domSquare.classList.remove("hidden");
       domSquare.classList.add(square.ship ? "hit" : "miss");
     }
-
-    //if (square.hit && square.ship) {
-    //    const hitShipName = square.ship; // "Destroyer", "Submarine", etc.
-    // const hitShip = player.gameboard.shipList[hitShipName];
-    //  }
   });
 }
 
@@ -106,11 +101,12 @@ function handleSquareClick(event) {
 
     if (attackResult.result === "sunk") {
       markShipAsSunk(player, attackResult.shipName, playerId);
+      if (checkWin(player)) {
+        handleWin(currentPlayer);
+        return;
+      }
     }
   }
-
-  console.log(`Case cliquée: ${player.name} - Ligne ${row}, Colonne ${col}`);
-  console.log(player.gameboard.shipList);
   handleRound();
 }
 
@@ -123,8 +119,19 @@ function markShipAsSunk(player, shipName, playerId) {
       domSquare.classList.add("sunk");
     }
   });
+}
 
-  console.log(`💥 ${shipName} coulé !`);
+function checkWin(player) {
+  let playerWin = true;
+  const playerShips = player.gameboard.shipList;
+
+  for (const shipName in playerShips) {
+    if (playerShips[shipName].sunk === false) {
+      playerWin = false;
+      break;
+    }
+  }
+  return playerWin;
 }
 
 function handleRound() {
@@ -132,6 +139,12 @@ function handleRound() {
   currentPlayer =
     currentPlayer === gameState.player1 ? gameState.player2 : gameState.player1;
   gameTitle.textContent = `Your turn ${currentPlayer.name}`;
+}
+
+function handleWin(winner) {
+  const gameTitle = document.getElementById("player-turn");
+  gameTitle.textContent = `Congratulation ${winner.name} you won !`;
+  gameActive = false;
 }
 
 export { displayGameBoards, updateBoardDisplay };
