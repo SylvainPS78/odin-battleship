@@ -215,6 +215,10 @@ main {
   color: #ffffff;
   transform: scale(1.07);
 }
+.ship-select-btn.selected {
+  background: #5367ff;
+  color: #ffffff;
+}
 
 @media (max-width: 768px) {
   .ship-button-container {

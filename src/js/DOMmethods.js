@@ -43,7 +43,7 @@ function createPlayerSection(player, playerId) {
   for (let row = 0; row < 10; row++) {
     for (let col = 0; col < 10; col++) {
       const square = document.createElement("div");
-      square.className = "board-square hidden";
+      square.className = "board-square"; //hidden
       square.dataset.row = row;
       square.dataset.col = col;
       square.dataset.player = playerId;
@@ -195,6 +195,11 @@ function createShipButtons() {
     btn.textContent = `${ship.name} (${ship.length})`;
     btn.dataset.shipName = ship.name;
     btn.dataset.shipLength = ship.length;
+
+    btn.addEventListener("click", (event) => {
+      shipSelectBtn(event.currentTarget);
+    });
+
     buttonContainer.appendChild(btn);
   });
 
@@ -204,6 +209,13 @@ function createShipButtons() {
   }
 }
 
-// Appeler la fonction après l'affichage des boards
+function shipSelectBtn(selectedButton) {
+  const shipButtons = document.querySelectorAll(".ship-select-btn");
+  for (const button of shipButtons) {
+    button.classList.remove("selected");
+  }
+
+  selectedButton.classList.add("selected");
+}
 
 export { displayGameBoards, updateBoardDisplay, createShipButtons };

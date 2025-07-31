@@ -274,6 +274,11 @@ main {
     color: $white;
     transform: scale(1.07);
   }
+
+  &.selected {
+    background: $primary-blue;
+    color: $white;
+  }
 }
 
 @media (max-width: 768px) {
