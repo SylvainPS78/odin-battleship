@@ -5,14 +5,14 @@ import player from "./js/player.js";
 import {
   displayGameBoards,
   updateBoardDisplay,
-  createShipButtons,
+  createButtons,
 } from "./js/DOMmethods.js";
 
 let player1 = new player("Player test", "real", "player1");
 let player2 = new player("Computer", "computer", "player2");
 
 displayGameBoards(player1, player2);
-createShipButtons();
+createButtons();
 
 //player1.gameboard.placeShip(0, 0, 2, "X", "Destroyer");
 //player1.gameboard.placeShip(5, 3, 3, "Y", "Submarine");

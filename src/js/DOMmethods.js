@@ -177,6 +177,11 @@ function simulateComputerClick() {
   }, 750);
 }
 
+function createButtons() {
+  createShipButtons();
+  createAxeButton();
+}
+
 function createShipButtons() {
   const ships = [
     { name: "Destroyer", length: 2 },
@@ -187,7 +192,7 @@ function createShipButtons() {
   ];
 
   const buttonContainer = document.createElement("div");
-  buttonContainer.className = "ship-button-container";
+  buttonContainer.className = "button-container";
 
   ships.forEach((ship) => {
     const btn = document.createElement("button");
@@ -218,4 +223,28 @@ function shipSelectBtn(selectedButton) {
   selectedButton.classList.add("selected");
 }
 
-export { displayGameBoards, updateBoardDisplay, createShipButtons };
+function createAxeButton() {
+  const buttonContainer = document.querySelector(".button-container");
+  const btn = document.createElement("button");
+  btn.className = "axe-btn";
+  btn.textContent = "Axe: Horizontal";
+  btn.dataset.currentAxe = "X";
+
+  btn.addEventListener("click", (event) => {
+    handleAxeButton(event.currentTarget);
+  });
+
+  buttonContainer.append(btn);
+}
+
+function handleAxeButton(axeButton) {
+  axeButton.classList.toggle("selected");
+  axeButton.textContent =
+    axeButton.dataset.currentAxe === "X"
+      ? "Axe: Vertical\u00A0\u00A0"
+      : "Axe: Horizontal";
+  axeButton.dataset.currentAxe =
+    axeButton.dataset.currentAxe === "X" ? "Y" : "X";
+}
+
+export { displayGameBoards, updateBoardDisplay, createButtons };
