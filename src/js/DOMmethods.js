@@ -139,12 +139,42 @@ function handleRound() {
   currentPlayer =
     currentPlayer === gameState.player1 ? gameState.player2 : gameState.player1;
   gameTitle.textContent = `Your turn ${currentPlayer.name}`;
+
+  if (currentPlayer.type === "computer") {
+    simulateComputerClick();
+  }
 }
 
 function handleWin(winner) {
   const gameTitle = document.getElementById("player-turn");
   gameTitle.textContent = `Congratulation ${winner.name} you won !`;
   gameActive = false;
+}
+
+function simulateComputerClick() {
+  if (currentPlayer.type !== "computer" || !gameActive) return;
+
+  const targetPlayerId = //define board to attack
+    currentPlayer.playerId === "player1" ? "player2" : "player1";
+  const targetPlayer = gameState[targetPlayerId];
+  const board = document.getElementById(`board-${targetPlayerId}`);
+
+  const availableSquares = []; // Search for all available targets
+  targetPlayer.gameboard.board.forEach((square, index) => {
+    if (!square.hit) {
+      availableSquares.push(index);
+    }
+  });
+
+  if (availableSquares.length === 0) return; // should never happen
+
+  setTimeout(() => {
+    if (!gameActive) return;
+
+    const randomIndex =
+      availableSquares[Math.floor(Math.random() * availableSquares.length)];
+    board.children[randomIndex].click();
+  }, 500);
 }
 
 export { displayGameBoards, updateBoardDisplay };
