@@ -1,16 +1,23 @@
 import Gameboard from "./gameBoard.js";
 
-let gameActive = true;
+let gameActive = false;
 let gameState = { player1: null, player2: null };
 let currentPlayer = null;
 
 function displayGameBoards(player) {
   const main = document.querySelector("main");
-  let gameContainer = main.querySelector(".game-container");
+  let gameSection = main.querySelector(".game-section");
+  if (!gameSection) {
+    gameSection = document.createElement("div");
+    gameSection.className = "game-section";
+    main.appendChild(gameSection);
+  }
+
+  let gameContainer = gameSection.querySelector(".game-container");
   if (!gameContainer) {
     gameContainer = document.createElement("div");
     gameContainer.className = "game-container";
-    main.appendChild(gameContainer);
+    gameSection.appendChild(gameContainer);
   }
 
   const playerSection = createPlayerSection(player, player.playerId);
@@ -18,6 +25,28 @@ function displayGameBoards(player) {
   gameState[player.playerId] = player;
   if (!currentPlayer) currentPlayer = player;
 }
+
+function createStartButton() {
+  const main = document.querySelector("main");
+
+  if (main.querySelector(".start-button")) {
+    return;
+  }
+
+  const startButton = document.createElement("button");
+  startButton.className = "start-button";
+  startButton.textContent = "Start Game";
+
+  startButton.addEventListener("click", handleStartGame);
+
+  main.appendChild(startButton);
+}
+
+function handleStartGame() {
+  switchToAttackMode();
+}
+
+function switchToAttackMode() {}
 
 function createPlayerSection(player, playerId) {
   const section = document.createElement("section");
@@ -43,7 +72,7 @@ function createPlayerSection(player, playerId) {
       square.dataset.col = col;
       square.dataset.player = playerId;
 
-      square.addEventListener("click", handleSquareClick);
+      square.addEventListener("click", handlePlacementClick);
 
       board.appendChild(square);
     }
@@ -56,21 +85,30 @@ function createPlayerSection(player, playerId) {
   return section;
 }
 
-function updateBoardDisplay(player, playerId) {
-  const board = document.getElementById(`board-${playerId}`);
+function handlePlacementClick(event) {
+  if (gameActive) return;
+  const square = event.target;
+  const row = parseInt(square.dataset.row);
+  const col = parseInt(square.dataset.col);
+  const playerId = square.dataset.player;
+  const player = gameState[playerId];
+  const axeButton = document.querySelector(".axe-btn");
+  const orientation = axeButton.dataset.currentAxe;
+  const shipButton = document.querySelector(".ship-select-btn.selected");
+  if (!shipButton) return; // Must select a ship to place first
+  const length = shipButton.dataset.shipLength;
+  const shipName = shipButton.dataset.shipName;
 
-  player.gameboard.board.forEach((square, index) => {
-    const domSquare = board.children[index];
+  if (playerId !== currentPlayer.playerId) return; // Player can't click ennemy board
 
-    if (square.ship) {
-      domSquare.classList.add("ship");
-      domSquare.dataset.shipName = square.ship;
-    }
-    if (square.hit) {
-      domSquare.classList.remove("hidden");
-      domSquare.classList.add(square.ship ? "hit" : "miss");
-    }
-  });
+  if (player.gameboard.placeValid(row, col, length, orientation)) {
+    player.gameboard.placeShip(row, col, length, orientation, shipName);
+    shipButton.classList.remove("selected");
+    shipButton.disabled = true;
+    updateBoardDisplay(player, playerId);
+  }
+
+  console.log(player.gameboard);
 }
 
 function handleSquareClick(event) {
@@ -103,6 +141,23 @@ function handleSquareClick(event) {
     }
   }
   handleRound();
+}
+
+function updateBoardDisplay(player, playerId) {
+  const board = document.getElementById(`board-${playerId}`);
+
+  player.gameboard.board.forEach((square, index) => {
+    const domSquare = board.children[index];
+
+    if (square.ship) {
+      domSquare.classList.add("ship");
+      domSquare.dataset.shipName = square.ship;
+    }
+    if (square.hit) {
+      domSquare.classList.remove("hidden");
+      domSquare.classList.add(square.ship ? "hit" : "miss");
+    }
+  });
 }
 
 function markShipAsSunk(player, shipName, playerId) {
@@ -175,6 +230,7 @@ function simulateComputerClick() {
 function createButtons() {
   createShipButtons();
   createAxeButton();
+  createStartButton();
 }
 
 function createShipButtons() {
@@ -204,8 +260,15 @@ function createShipButtons() {
   });
 
   const main = document.querySelector("main");
-  if (main) {
-    main.insertBefore(buttonContainer, main.firstChild);
+  let gameSection = main.querySelector(".game-section");
+  if (!gameSection) {
+    gameSection = document.createElement("div");
+    gameSection.className = "game-section";
+    main.appendChild(gameSection);
+  }
+
+  if (gameSection) {
+    gameSection.insertBefore(buttonContainer, gameSection.firstChild);
   }
 }
 
@@ -242,4 +305,9 @@ function handleAxeButton(axeButton) {
     axeButton.dataset.currentAxe === "X" ? "Y" : "X";
 }
 
-export { displayGameBoards, updateBoardDisplay, createButtons };
+export {
+  displayGameBoards,
+  updateBoardDisplay,
+  createButtons,
+  createStartButton,
+};

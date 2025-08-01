@@ -41,10 +41,10 @@ class Gameboard {
       }
     } else if (orientation === "Y") {
       for (let i = 0; i < length; i++) {
-        if (row - i < 0) {
+        if (row + i > 9) {
           placeValid = false;
           return placeValid;
-        } else if (this.board[(row - i) * 10 + col].ship !== null) {
+        } else if (this.board[(row + i) * 10 + col].ship !== null) {
           placeValid = false;
           return placeValid;
         }
@@ -67,7 +67,7 @@ class Gameboard {
       }
       if (orientation === "Y") {
         for (let i = 0; i < length; i++) {
-          this.board[(row - i) * 10 + col].ship = newShip.name;
+          this.board[(row + i) * 10 + col].ship = newShip.name;
         }
       }
     }
