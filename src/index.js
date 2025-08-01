@@ -11,7 +11,8 @@ import {
 let player1 = new player("Player test", "real", "player1");
 let player2 = new player("Computer", "computer", "player2");
 
-displayGameBoards(player1, player2);
+displayGameBoards(player1);
+displayGameBoards(player2);
 createButtons();
 
 //player1.gameboard.placeShip(0, 0, 2, "X", "Destroyer");

@@ -4,24 +4,19 @@ let gameActive = true;
 let gameState = { player1: null, player2: null };
 let currentPlayer = null;
 
-function displayGameBoards(player1, player2) {
-  gameState.player1 = player1;
-  gameState.player2 = player2;
-  currentPlayer = player1;
-
+function displayGameBoards(player) {
   const main = document.querySelector("main");
+  let gameContainer = main.querySelector(".game-container");
+  if (!gameContainer) {
+    gameContainer = document.createElement("div");
+    gameContainer.className = "game-container";
+    main.appendChild(gameContainer);
+  }
 
-  const gameContainer = document.createElement("div");
-  gameContainer.className = "game-container";
-
-  const player1Section = createPlayerSection(player1, "player1");
-  const player2Section = createPlayerSection(player2, "player2");
-
-  gameContainer.appendChild(player1Section);
-  gameContainer.appendChild(player2Section);
-
-  main.innerHTML = "";
-  main.appendChild(gameContainer);
+  const playerSection = createPlayerSection(player, player.playerId);
+  gameContainer.appendChild(playerSection);
+  gameState[player.playerId] = player;
+  if (!currentPlayer) currentPlayer = player;
 }
 
 function createPlayerSection(player, playerId) {
